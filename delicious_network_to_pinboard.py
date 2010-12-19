@@ -70,3 +70,5 @@ for user in network:
   else:  
   
     print "  User %s not found under that name" % user['user']
+    # TODO use the delpin username mapping JSON file
+    # actually, we should do that before even firing the GET...
