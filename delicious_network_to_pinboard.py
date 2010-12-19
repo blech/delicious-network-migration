@@ -9,7 +9,7 @@ import urllib2
 delicious_username = "blech"
 
 pinboard_username = "blech"
-pinboard_password = "yourpasswordgoeshere"
+pinboard_password = ""
 
 network_url = "http://feeds.delicious.com/v2/json/networkmembers/%s" % delicious_username
 network_json = urllib2.urlopen(network_url).read()
@@ -46,11 +46,20 @@ for user in network:
       links = sub_div[0].findAllNext('a')
       js = links[0]['onclick']
       arguments = js[js.index('(')+1:js.index(')')]
-      user, csrf = arguments.split(',')
-      user = user.strip("'")
-      csrf = csrf.strip("'")
+      username, token = arguments.split(',')
+      username = username.strip("'")
+      token = token.strip("'")
 
-      print "  Need to click subscribe button for %s" % (user)
+      # print "  Need to click subscribe button for %s" % (user)
+
+      params = urllib.urlencode(dict(username=username, token=token))
+      result = opener.open('http://pinboard.in/subscribe/', params)
+      if result.read() == "['ok']":
+        print "  Subscribed"
+      else:
+        print "  Not OK: something went wrong"
+      
+      result.close()
 
     else:
       
